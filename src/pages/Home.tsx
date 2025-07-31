@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "sonner";
 
 // Fallback image
-import laptopGaming from "@/assets/laptop-gaming.jpg";
+
 
 // Interface for Product based on backend Product entity
 interface Product {
@@ -59,7 +59,7 @@ const Home = () => {
         const products = response.data.map((product) => ({
           id: product.id.toString(),
           name: product.name,
-          image: product.imageUrl ? product.imageUrl : laptopGaming, // Use imageUrl or fallback
+          image: product.imageUrl, 
           price: product.price,
           rating: product.rating || 0,
           reviewCount: product.reviews ? product.reviews.length : 0,

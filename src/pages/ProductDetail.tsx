@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Star, Heart, ShoppingCart } from "lucide-react";
+import { Star, Heart, ShoppingCart, Loader2 } from "lucide-react"; // Added Loader2
 import { toast } from "sonner";
 
 // Type Definitions
@@ -176,6 +176,8 @@ const ProductDetail = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isTogglingWishlist, setIsTogglingWishlist] = useState(false); // Added state for wishlist toggle
+  const [isBuying, setIsBuying] = useState(false); // Added state for buy now toggle
 
   useEffect(() => {
     if (!id) {
@@ -260,14 +262,59 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddToWishlist = () => {
+  const handleAddToWishlist = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
+      toast.error("Please log in to add items to your wishlist.");
       navigate("/login");
       return;
     }
-    setIsWishlisted(true);
-    toast.success("Added to wishlist!");
+    if (!product) return;
+
+    setIsTogglingWishlist(true); // Disable button to prevent multiple clicks
+
+    try {
+      // The API expects a body with the productId
+      const requestBody = { productId: product.id };
+      
+      await axios.post(
+        `http://localhost:8080/api/wishlist`,
+        requestBody,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // On success, update the UI
+      setIsWishlisted(true);
+      toast.success("Added to your wishlist!");
+
+    } catch (error) {
+      toast.error("Could not add to wishlist. Please try again.");
+      console.error("Add to wishlist error:", error);
+    } finally {
+      setIsTogglingWishlist(false); // Re-enable button
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!localStorage.getItem("token")) {
+      toast.error("Please log in to buy this product.");
+      navigate("/login");
+      return;
+    }
+    if (!product) return;
+
+    // Navigate to checkout and pass the product info in the state
+    navigate('/checkout', { 
+      state: { 
+        directProduct: {
+          productId: product.id,
+          name: product.name,
+          quantity: quantity,
+          price: product.price,
+          imageUrl: product.imageUrl,
+        }
+      } 
+    });
   };
 
   if (loading) {
@@ -385,10 +432,11 @@ const ProductDetail = () => {
                 <Button
                   size="lg"
                   className="flex-1"
-                  disabled={product.stock === 0}
-                  onClick={() => navigate("/checkout")}
+                  disabled={product.stock === 0 || isBuying}
+                  onClick={handleBuyNow}
                 >
-                  Buy Now
+                  {isBuying && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
+                  {isBuying ? "Processing..." : "Buy Now"}
                 </Button>
                 <Button
                   variant="outline"
@@ -406,11 +454,12 @@ const ProductDetail = () => {
                 size="lg"
                 className="w-full"
                 onClick={handleAddToWishlist}
+                disabled={isTogglingWishlist || isWishlisted}
               >
                 <Heart
-                  className={`w-5 h-5 mr-2 ${isWishlisted ? "fill-red-500" : ""}`}
+                  className={`w-5 h-5 mr-2 transition-colors ${isWishlisted ? "fill-red-500 text-red-500" : ""}`}
                 />
-                {isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+                {isTogglingWishlist ? "Adding..." : isWishlisted ? "Added to Wishlist" : "Add to Wishlist"}
               </Button>
             </div>
           </div>

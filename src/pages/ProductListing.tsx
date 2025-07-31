@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react"; // Added for buttons
+import { toast } from "sonner";
 
 // Interface for SearchResponseDTO based on backend
 interface Product {
@@ -54,6 +56,9 @@ const ProductListing = () => {
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const [sortBy, setSortBy] = useState("featured");
   const [showFilters, setShowFilters] = useState(false);
+
+  // State for wishlist and cart actions
+  const [isTogglingWishlist, setIsTogglingWishlist] = useState(false); // For wishlist loading state
 
   // Effect to fetch data from the API
   useEffect(() => {
@@ -137,6 +142,54 @@ const ProductListing = () => {
   const pageTitle = keyword
     ? `Results for "${keyword}" (${products.length})`
     : `All Products (${products.length})`;
+
+  // Handler for Add to Cart
+  const handleAddToCart = async (productId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    try {
+      await axios.post(
+        `http://localhost:8080/api/cart/add`,
+        { productId, quantity: 1 }, // Default quantity to 1
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Added to cart!");
+    } catch (error) {
+      toast.error("Failed to add to cart. Please try again.");
+      console.error("Add to cart error:", error);
+    }
+  };
+
+  // Handler for Add to Wishlist
+  const handleAddToWishlist = async (productId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please log in to add items to your wishlist.");
+      navigate("/login");
+      return;
+    }
+
+    setIsTogglingWishlist(true); // Disable button to prevent multiple clicks
+
+    try {
+      const requestBody = { productId };
+      await axios.post(
+        `http://localhost:8080/api/wishlist`,
+        requestBody,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Note: This assumes the backend doesn't return wishlist status; you might need to fetch it
+      toast.success("Added to your wishlist!");
+    } catch (error) {
+      toast.error("Could not add to wishlist. Please try again.");
+      console.error("Add to wishlist error:", error);
+    } finally {
+      setIsTogglingWishlist(false); // Re-enable button
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -271,6 +324,8 @@ const ProductListing = () => {
                     reviewCount={0} // Review count not provided in Product entity
                     category={product.category}
                     brandName={product.brandName}
+                    onAddToCart={() => handleAddToCart(product.id)}
+                    onAddToWishlist={() => handleAddToWishlist(product.id)}
                   />
                 ))}
               </div>

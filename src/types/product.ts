@@ -59,3 +59,12 @@ export interface SearchResponse {
   products: Product[];
   availableBrands: string[];
 }
+
+export interface WishlistItem {
+  wishlistItemId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  productImageUrl: string; 
+  addedAt: string; 
+}
