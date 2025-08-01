@@ -2,48 +2,45 @@
 
 This is the **frontend application** for the **TechStack E-Commerce Web App**, built using **React**, **TypeScript**, and **Tailwind CSS**. It connects seamlessly with the backend powered by **Spring Boot**, offering a smooth, secure, and responsive user experience for browsing and purchasing electronic products.
 
----
+
 
 ## 📁 Project Folder Structure
 
 src/
-├── components/ # Reusable UI components
-│ ├── auth/ # Authentication guard
-│ │ └── AuthGuard.tsx
-│ ├── home/ # Homepage sections
-│ │ ├── CategorySection.tsx
-│ │ └── HeroSection.tsx
-│ ├── layout/ # Site-wide layout components
-│ │ └── Header.tsx
-│ ├── products/ # Product card components
-│ │ └── ProductCard.tsx
-│ └── ui/ # Shared UI utilities (modals, loaders)
-│
-├── hooks/ # Custom React hooks
-│ ├── use-mobile.tsx
-│ └── use-toast.ts
-│
-├── lib/ # Utility and helper functions
-│ └── utils.ts
-│
-├── pages/ # Top-level route-based pages
-│ ├── Cart.tsx
-│ ├── CheckoutPage.tsx
-│ ├── Home.tsx
-│ ├── Index.tsx
-│ ├── LoginPage.tsx
-│ ├── NotFound.tsx
-│ ├── ProductDetail.tsx
-│ ├── ProductListing.tsx
-│ ├── ProfilePage.tsx
-│ ├── SignupPage.tsx
-│ └── WishlistPage.tsx
-│
-├── types/ # TypeScript interfaces and types
-│ ├── apiService.ts
-│ └── product.ts
+├── components/
+│   ├── auth/
+│   │   └── AuthGuard.tsx
+│   ├── home/
+│   │   ├── CategorySection.tsx
+│   │   └── HeroSection.tsx
+│   ├── layout/
+│   │   └── Header.tsx
+│   ├── products/
+│   │   └── ProductCard.tsx
+│   └── ui/
+├── hooks/
+│   ├── use-mobile.tsx
+│   └── use-toast.ts
+├── lib/
+│   └── utils.ts
+├── pages/
+│   ├── Cart.tsx
+│   ├── CheckoutPage.tsx
+│   ├── Home.tsx
+│   ├── Index.tsx
+│   ├── LoginPage.tsx
+│   ├── NotFound.tsx
+│   ├── ProductDetail.tsx
+│   ├── ProductListing.tsx
+│   ├── ProfilePage.tsx
+│   ├── SignupPage.tsx
+│   └── WishlistPage.tsx
+├── types/
+│   ├── apiService.ts
+│   └── product.ts
 
----
+
+
 
 ## 💡 Features
 
