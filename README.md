@@ -5,7 +5,7 @@ This is the **frontend application** for the **TechStack E-Commerce Web App**, b
 
 
 ## 📁 Project Folder Structure
-
+```
 src/
 ├── components/
 │   ├── auth/
@@ -39,7 +39,7 @@ src/
 │   ├── apiService.ts
 │   └── product.ts
 
-
+```
 
 
 ## 💡 Features
