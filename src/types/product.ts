@@ -22,7 +22,7 @@ export interface ProductReview {
   comment: string;
 }
 
-// Type for the data submitted via the review form
+
 export interface ReviewFormData {
   reviewerName: string;
   rating: number;
@@ -34,8 +34,8 @@ export interface Product {
   name: string;
   price: number;
   stock: number;
-  imageData?: number[]; // Raw byte array from API
-  imageUrl: string; // Converted blob URL for <img> src
+  imageData?: number[]; 
+  imageUrl: string; 
   brandName: string;
   modelName: string;
   category: string;
@@ -44,7 +44,7 @@ export interface Product {
   rating: number;
   specification: Specification;
   reviews: ProductReview[];
-  // Add other fields your frontend might use, even if not from API
+  
   originalPrice?: number;
   discount?: number;
   reviewCount?: number;

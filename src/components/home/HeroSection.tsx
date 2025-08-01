@@ -30,7 +30,7 @@ const HeroSection = () => {
               </p>
             </div>
 
-            {/* CTA Buttons */}
+
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
@@ -67,7 +67,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Hero Image/Visual */}
+          
           <div className="relative lg:block hidden">
             <div className="relative">
               <div className="w-96 h-96 bg-white/10 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>

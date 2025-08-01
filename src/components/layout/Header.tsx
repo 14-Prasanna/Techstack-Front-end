@@ -11,19 +11,18 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartItemCount, setCartItemCount] = useState<number>(0);
   
-  // Use a single state to manage authentication status
+ 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem("token"));
   
-  // No need for separate loading state in header, it should be fast
-  // No need for userEmail state, we can get it from localStorage directly if needed for display
+  
 
   useEffect(() => {
     const fetchHeaderData = async () => {
-      // Only fetch cart count if the user is logged in
+     
       if (isAuthenticated) {
         try {
           const token = localStorage.getItem("token");
-          // Use the GET /api/cart endpoint and count the items
+          
           const response = await axios.get(
             `http://localhost:8080/api/cart`,
             { headers: { Authorization: `Bearer ${token}` } }
@@ -34,21 +33,21 @@ const Header = () => {
           setCartItemCount(0);
         }
       } else {
-        setCartItemCount(0); // Ensure cart is 0 if not logged in
+        setCartItemCount(0); 
       }
     };
 
     fetchHeaderData();
     
-    // Custom event listener to update cart count from other components
+    
     const handleCartUpdate = () => fetchHeaderData();
     window.addEventListener('cartUpdated', handleCartUpdate);
 
-    // Cleanup
+   
     return () => {
         window.removeEventListener('cartUpdated', handleCartUpdate);
     };
-  }, [isAuthenticated]); // Rerun when authentication status changes
+  }, [isAuthenticated]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +62,7 @@ const Header = () => {
     setIsAuthenticated(false);
     setCartItemCount(0);
     navigate("/");
-    // A full refresh can help reset state across the app cleanly
+   
     window.location.reload();
   };
 
@@ -71,7 +70,7 @@ const Header = () => {
 
   return (
     <header className="bg-background border-b sticky top-0 z-50 shadow-sm">
-      {/* Top Bar */}
+     
       <div className="bg-primary text-primary-foreground py-2 text-center text-sm">
         Free shipping on orders over ₹500 | Easy 30-day returns
       </div>

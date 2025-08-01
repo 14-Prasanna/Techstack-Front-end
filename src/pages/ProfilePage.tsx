@@ -8,11 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { User, ShoppingBag, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label"; // <-- THIS IS THE FIX
+import { Label } from "@/components/ui/label"; 
 
-// ====================================================================
-// Type Definitions
-// ====================================================================
 interface UserProfile {
     id: number;
     name: string;

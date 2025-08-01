@@ -11,11 +11,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
-// ====================================================================
-// 1. TYPE DEFINITIONS
-// ====================================================================
-
-// Interface for a single item to be displayed in the order summary
 interface CheckoutItem {
   productId: number;
   name: string;
@@ -24,13 +19,13 @@ interface CheckoutItem {
   imageUrl: string;
 }
 
-// Interface for the state passed via react-router's navigate function
+
 interface CheckoutLocationState {
   cartItemIds?: number[];
   directProduct?: CheckoutItem;
 }
 
-// Type matching the backend's CheckoutRequestDTO for the POST request
+
 type PaymentMethod = "UPI" | "WALLET" | "CASH_ON_HAND";
 interface CheckoutRequestDTO {
   cartItemIds?: number[];
@@ -46,12 +41,12 @@ interface CheckoutRequestDTO {
   paymentMethod: PaymentMethod;
 }
 
-// Type for the successful order response from the backend
+
 interface OrderResponseDTO {
     orderId: number;
 }
 
-// Type for a single item coming from the /api/cart backend endpoint
+
 interface BackendCartItem {
     id: number;
     productId: number;
@@ -62,21 +57,19 @@ interface BackendCartItem {
 }
 
 
-// ====================================================================
-// 2. MAIN CHECKOUT PAGE COMPONENT
-// ====================================================================
+
 const CheckoutPage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as CheckoutLocationState | null;
 
-  // State for data fetching and UI control
+  
   const [itemsToDisplay, setItemsToDisplay] = useState<CheckoutItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
-  // State for the form inputs
+
   const [formData, setFormData] = useState({
     addressLine1: "", addressLine2: "", district: "", state: "",
     country: "India", phoneNumber: "", alternativePhoneNumber: "",
@@ -92,12 +85,12 @@ const CheckoutPage: FC = () => {
     }
 
     const prepareCheckout = async () => {
-      // Scenario 1: Direct "Buy Now" from a product page
+      
       if (locationState?.directProduct) {
         setItemsToDisplay([locationState.directProduct]);
         setLoading(false);
       } 
-      // Scenario 2: Checkout from the cart page
+      
       else if (locationState?.cartItemIds && locationState.cartItemIds.length > 0) {
         try {
           const response = await axios.get(`http://localhost:8080/api/cart`, {
@@ -115,7 +108,7 @@ const CheckoutPage: FC = () => {
           setLoading(false);
         }
       } 
-      // Scenario 3: User navigated here directly without items
+      
       else {
         toast.error("No items selected for checkout.");
         navigate("/cart"); // Redirect to cart page
@@ -125,7 +118,7 @@ const CheckoutPage: FC = () => {
     prepareCheckout();
   }, [locationState, navigate]);
 
-  // Memoized calculation for the order summary to prevent re-calculating on every render
+  
   const orderSummary = useMemo(() => {
     if (itemsToDisplay.length === 0) return { subtotal: 0, cgst: 0, sgst: 0, total: 0 };
     const subtotal = itemsToDisplay.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -161,7 +154,7 @@ const CheckoutPage: FC = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success(`Order #${response.data.orderId} placed successfully!`);
-      // You can redirect to an order confirmation page here
+      
       navigate(`/`); 
     } catch (err) {
       toast.error("Failed to place order. Please check your details and try again.");
@@ -191,7 +184,7 @@ const CheckoutPage: FC = () => {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
         <form onSubmit={handlePlaceOrder} className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Left Column: Form for Address and Payment */}
+          
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader><CardTitle>1. Shipping Address</CardTitle></CardHeader>
@@ -285,6 +278,6 @@ const CheckoutPage: FC = () => {
       </div>
     </div>
   );
-};
+};  
 
 export default CheckoutPage;

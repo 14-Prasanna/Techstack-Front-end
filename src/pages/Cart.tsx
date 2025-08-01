@@ -8,16 +8,13 @@ import { Separator } from "@/components/ui/separator";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-// ====================================================================
-// Type Definitions (Matching Backend DTO)
-// ====================================================================
 interface CartItemDTO {
   id: number;
   productId: number;
   productName: string;
   quantity: number;
   price: number;
-  imageUrl: string; // The backend converts byte[] to a Base64 string for this DTO
+  imageUrl: string; 
 }
 
 interface CartResponseDTO {
@@ -29,9 +26,6 @@ interface CartResponseDTO {
   cartItems: CartItemDTO[];
 }
 
-// ====================================================================
-// Main Cart Component
-// ====================================================================
 const Cart: FC = () => {
   const navigate = useNavigate();
   const [cart, setCart] = useState<CartResponseDTO | null>(null);
@@ -48,7 +42,7 @@ const Cart: FC = () => {
       }
       try {
         setLoading(true);
-        // CORRECTED: URL changed from /api/cart/get to /api/cart
+       
         const response = await axios.get<CartResponseDTO>(
           `http://localhost:8080/api/cart`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -56,7 +50,7 @@ const Cart: FC = () => {
         setCart(response.data);
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 404) {
-          setError("Your cart is empty."); // Handle case where user has no active cart
+          setError("Your cart is empty."); 
         } else {
           setError("Failed to fetch cart details. Please try again.");
         }
@@ -73,12 +67,12 @@ const Cart: FC = () => {
     const token = localStorage.getItem("token");
     if (!token) { navigate("/login"); return; }
     try {
-      // CORRECTED: URL changed to the proper RESTful endpoint
+   
       const response = await axios.delete<CartResponseDTO>(
         `http://localhost:8080/api/cart/items/${cartItemId}`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // CORRECTED: Update state with the fresh cart data from the server
+     
       setCart(response.data);
       toast.success("Item removed from cart!");
     } catch (error) {
@@ -91,17 +85,17 @@ const Cart: FC = () => {
     const token = localStorage.getItem("token");
     if (!token) { navigate("/login"); return; }
     
-    // NEW: Add a confirmation dialog for a destructive action
+   
     if (!window.confirm("Are you sure you want to delete your entire cart? This cannot be undone.")) {
       return;
     }
 
     try {
-      // CORRECTED: URL changed from /api/cart/delete to /api/cart
+    
       await axios.delete(`http://localhost:8080/api/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCart(null); // Clear the cart in the UI
+      setCart(null); 
       toast.success("Cart has been successfully deleted!");
     } catch (error) {
       toast.error("Failed to delete cart.");
@@ -109,7 +103,7 @@ const Cart: FC = () => {
     }
   };
 
-  // Helper function to calculate the total price
+ 
   const calculateSubtotal = () => {
     if (!cart?.cartItems) return 0;
     return cart.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -192,9 +186,6 @@ const Cart: FC = () => {
                   <span>Total</span>
                   <span>₹{calculateSubtotal().toLocaleString("en-IN")}</span>
                 </div>
-                <Button className="w-full" size="lg" onClick={() => navigate("/checkout")}>
-                  Proceed to Checkout
-                </Button>
                 <Button className="w-full" variant="outline" onClick={handleDeleteCart}>
                   Delete Entire Cart
                 </Button>

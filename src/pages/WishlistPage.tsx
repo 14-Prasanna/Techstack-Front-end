@@ -7,27 +7,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ShoppingCart, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
-// ====================================================================
-// 1. TYPE DEFINITIONS (Self-contained in this file)
-// ====================================================================
+
 interface WishlistItem {
   wishlistItemId: number;
   productId: number;
   productName: string;
   productPrice: number;
-  productImageUrl: string; // The backend already prepares this as a Base64 string
+  productImageUrl: string; 
   addedAt: string;
 }
 
-// ====================================================================
-// 2. API LOGIC (Self-contained in this file)
-// ====================================================================
 const API_BASE_URL = 'http://localhost:8080/api';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
     if (!token) {
-        // This case should be handled by the component logic before calling the API
+       
         throw new Error("No authentication token found.");
     }
     return { Authorization: `Bearer ${token}` };
@@ -54,9 +49,7 @@ const addToCart = async (productId: number, quantity: number) => {
     );
 };
 
-// ====================================================================
-// 3. MAIN WISHLIST PAGE COMPONENT
-// ====================================================================
+
 const WishlistPage: FC = () => {
   const navigate = useNavigate();
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
